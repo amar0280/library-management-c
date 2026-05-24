@@ -341,7 +341,7 @@ void undoLastAction() {
 /* ============================================================
    SECTION 5: HELPER / UTILITY FUNCTIONS
    ============================================================ */
-
+/* UI Module - Contributed by Harsh */
 /*
  * printHeader() — Prints a decorative console header
  */
