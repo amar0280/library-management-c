@@ -165,3 +165,5 @@ This project demonstrates practical use of data structures in a real-world scena
 - "The C Programming Language" — Kernighan & Ritchie
 - "Data Structures Using C" — Reema Thareja
 - GCC Documentation: https://gcc.gnu.org
+
+*Documentation reviewed by Vipul Langote*
