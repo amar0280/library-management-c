@@ -57,7 +57,8 @@ void push(int bookId, char *action) {
     newNode->bookId = bookId;
     strcpy(newNode->action, action);
     newNode->next = stackTop;  /* New node points to old top */
-    stackTop = newNode;        /* Update top to new node */
+   /* Stack Module - Contributed by Sainath */
+   stackTop = newNode;        /* Update top to new node */
     printf("[STACK] Action recorded: Book ID %d -> %s\n", bookId, action);
 }
 
