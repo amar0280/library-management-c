@@ -1,53 +1,26 @@
-/*
- * ============================================================
- *  Library Management System
- *  Using Singly Linked List + Stack in C
- * ============================================================
- *  Group Project — Console Based
- *  Language: C
- *  Data Structures: Singly Linked List, Stack
- * ============================================================
- */
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-/* ============================================================
-   SECTION 1: STRUCTURE DEFINITIONS
-   ============================================================ */
 
-/* Book node for the Singly Linked List */
 typedef struct Book {
-    int id;                  /* Unique Book ID */
-    char title[100];         /* Book Title */
-    char author[100];        /* Author Name */
-    int isIssued;            /* 0 = Available, 1 = Issued */
-    struct Book *next;       /* Pointer to next book node */
+    int id;                 
+    char title[100];   
+    char author[100];        
+    int isIssued;            
+    struct Book *next;      
 } Book;
 
-/* Stack node for tracking issue/return history (Undo support) */
+
 typedef struct StackNode {
-    int bookId;              /* ID of the book in this operation */
-    char action[20];         /* "ISSUED" or "RETURNED" */
-    struct StackNode *next;  /* Pointer to next stack node */
+    int bookId;             
+    char action[20];        
+    struct StackNode *next;  
 } StackNode;
 
-/* ============================================================
-   SECTION 2: GLOBAL VARIABLES
-   ============================================================ */
+Book *head = NULL;          
+StackNode *stackTop = NULL;
 
-Book *head = NULL;           /* Head of the linked list */
-StackNode *stackTop = NULL;  /* Top of the stack */
-
-/* ============================================================
-   SECTION 3: STACK OPERATIONS
-   ============================================================ */
-
-/*
- * push() — Pushes a new action onto the stack
- * Called whenever a book is issued or returned
- */
 void push(int bookId, char *action) {
     StackNode *newNode = (StackNode *)malloc(sizeof(StackNode));
     if (newNode == NULL) {
@@ -56,29 +29,21 @@ void push(int bookId, char *action) {
     }
     newNode->bookId = bookId;
     strcpy(newNode->action, action);
-    newNode->next = stackTop;  /* New node points to old top */
-   /* Stack Module - Contributed by Sainath */
-   stackTop = newNode;        /* Update top to new node */
+    newNode->next = stackTop;  
+   stackTop = newNode;        
     printf("[STACK] Action recorded: Book ID %d -> %s\n", bookId, action);
 }
 
-/*
- * pop() — Pops the top action from the stack (for undo)
- * Returns the popped node (caller must free it)
- */
 StackNode *pop() {
     if (stackTop == NULL) {
         printf("[INFO] No actions to undo. Stack is empty.\n");
         return NULL;
     }
     StackNode *temp = stackTop;
-    stackTop = stackTop->next;  /* Move top down */
+    stackTop = stackTop->next;
     return temp;
 }
 
-/*
- * peekStack() — Shows the top of the stack without removing it
- */
 void peekStack() {
     if (stackTop == NULL) {
         printf("Stack is empty. No recent actions.\n");
@@ -88,9 +53,7 @@ void peekStack() {
     }
 }
 
-/*
- * displayHistory() — Shows all actions in the stack (top to bottom)
- */
+
 void displayHistory() {
     if (stackTop == NULL) {
         printf("No history available.\n");
@@ -105,13 +68,6 @@ void displayHistory() {
     }
 }
 
-/* ============================================================
-   SECTION 4: LINKED LIST OPERATIONS
-   ============================================================ */
-
-/*
- * addBook() — Adds a new book at the END of the linked list
- */
 void addBook() {
     Book *newBook = (Book *)malloc(sizeof(Book));
     if (newBook == NULL) {
@@ -123,7 +79,7 @@ void addBook() {
     scanf("%d", &newBook->id);
     getchar(); /* Clear input buffer */
 
-    /* Check for duplicate ID */
+
     Book *temp = head;
     while (temp != NULL) {
         if (temp->id == newBook->id) {
@@ -136,20 +92,19 @@ void addBook() {
 
     printf("Enter Book Title : ");
     fgets(newBook->title, 100, stdin);
-    newBook->title[strcspn(newBook->title, "\n")] = '\0'; /* Remove newline */
-
+    newBook->title[strcspn(newBook->title, "\n")] = '\0'; 
     printf("Enter Author Name: ");
     fgets(newBook->author, 100, stdin);
     newBook->author[strcspn(newBook->author, "\n")] = '\0';
 
-    newBook->isIssued = 0;   /* New book is available by default */
+    newBook->isIssued = 0;  
     newBook->next = NULL;
 
-    /* If list is empty, new book becomes head */
+   
     if (head == NULL) {
         head = newBook;
     } else {
-        /* Traverse to end of list */
+        
         Book *current = head;
         while (current->next != NULL) {
             current = current->next;
@@ -160,9 +115,6 @@ void addBook() {
     printf("[SUCCESS] Book '%s' added successfully!\n", newBook->title);
 }
 
-/*
- * displayBooks() — Displays all books in the linked list
- */
 void displayBooks() {
     if (head == NULL) {
         printf("[INFO] No books in the library.\n");
@@ -183,10 +135,6 @@ void displayBooks() {
     }
 }
 
-/*
- * searchBook() — Searches for a book by ID
- * Returns pointer to the book, or NULL if not found
- */
 Book *searchBook(int id) {
     Book *temp = head;
     while (temp != NULL) {
@@ -195,12 +143,9 @@ Book *searchBook(int id) {
         }
         temp = temp->next;
     }
-    return NULL;  /* Not found */
+    return NULL;  
 }
 
-/*
- * searchAndDisplay() — Search book by ID and print its details
- */
 void searchAndDisplay() {
     int id;
     printf("\nEnter Book ID to search: ");
@@ -218,10 +163,7 @@ void searchAndDisplay() {
     }
 }
 
-/*
- * deleteBook() — Deletes a book from the linked list by ID
- * Cannot delete a book that is currently issued
- */
+
 void deleteBook() {
     int id;
     printf("\nEnter Book ID to delete: ");
@@ -235,7 +177,7 @@ void deleteBook() {
     Book *current = head;
     Book *prev = NULL;
 
-    /* Traverse to find the book */
+   
     while (current != NULL && current->id != id) {
         prev = current;
         current = current->next;
@@ -251,21 +193,18 @@ void deleteBook() {
         return;
     }
 
-    /* Unlink the node */
+   
     if (prev == NULL) {
-        head = current->next;   /* Deleting head node */
+        head = current->next;   
     } else {
-        prev->next = current->next;  /* Bypass the node */
+        prev->next = current->next;  
     }
 
     printf("[SUCCESS] Book '%s' deleted successfully.\n", current->title);
-    free(current);  /* Free memory */
+    free(current);
 }
 
-/*
- * issueBook() — Issues a book to a student
- * Pushes the action onto the stack
- */
+
 void issueBook() {
     int id;
     printf("\nEnter Book ID to issue: ");
@@ -287,10 +226,7 @@ void issueBook() {
     push(id, "ISSUED");  /* Record in stack */
 }
 
-/*
- * returnBook() — Returns a previously issued book
- * Pushes the action onto the stack
- */
+
 void returnBook() {
     int id;
     printf("\nEnter Book ID to return: ");
@@ -309,15 +245,12 @@ void returnBook() {
 
     book->isIssued = 0;
     printf("[SUCCESS] Book '%s' returned successfully!\n", book->title);
-    push(id, "RETURNED");  /* Record in stack */
-}
+    push(id, "RETURNED");  
 
-/*
- * undoLastAction() — Undoes the last issue or return using the stack
- */
+
 void undoLastAction() {
     StackNode *last = pop();
-    if (last == NULL) return;  /* Stack was empty */
+    if (last == NULL) return;  
 
     Book *book = searchBook(last->bookId);
     if (book == NULL) {
@@ -326,7 +259,7 @@ void undoLastAction() {
         return;
     }
 
-    /* Reverse the last action */
+  
     if (strcmp(last->action, "ISSUED") == 0) {
         book->isIssued = 0;
         printf("[UNDO] Reversed: Book '%s' is now Available again.\n", book->title);
@@ -335,16 +268,10 @@ void undoLastAction() {
         printf("[UNDO] Reversed: Book '%s' is marked as Issued again.\n", book->title);
     }
 
-    free(last);  /* Free the popped node */
+    free(last);  
 }
 
-/* ============================================================
-   SECTION 5: HELPER / UTILITY FUNCTIONS
-   ============================================================ */
-/* UI Module - Contributed by Harsh */
-/*
- * printHeader() — Prints a decorative console header
- */
+
 void printHeader() {
     printf("\n");
     printf("========================================================\n");
@@ -353,9 +280,7 @@ void printHeader() {
     printf("========================================================\n");
 }
 
-/*
- * printMenu() — Displays the main menu
- */
+
 void printMenu() {
     printf("\n-------------- MAIN MENU ---------------\n");
     printf(" 1. Add Book\n");
@@ -371,9 +296,7 @@ void printMenu() {
     printf("Enter your choice: ");
 }
 
-/*
- * freeLinkedList() — Frees all nodes in the linked list before exit
- */
+
 void freeLinkedList() {
     Book *temp;
     while (head != NULL) {
@@ -383,9 +306,7 @@ void freeLinkedList() {
     }
 }
 
-/*
- * freeStack() — Frees all nodes in the stack before exit
- */
+
 void freeStack() {
     StackNode *temp;
     while (stackTop != NULL) {
@@ -394,10 +315,6 @@ void freeStack() {
         free(temp);
     }
 }
-
-/* ============================================================
-   SECTION 6: MAIN FUNCTION
-   ============================================================ */
 
 int main() {
     int choice;
