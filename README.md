@@ -45,19 +45,6 @@ library_management/
 
 ---
 
-## 🛠️ How to Compile and Run
-
-### On Linux / macOS:
-```bash
-gcc src/library.c -o library
-./library
-```
-
-### On Windows (using GCC/MinGW):
-```bash
-gcc src\library.c -o library.exe
-library.exe
-```
 
 ---
 
